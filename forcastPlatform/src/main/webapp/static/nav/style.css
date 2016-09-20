@@ -1,0 +1,64 @@
+/* Reset */
+
+* {
+	margin:0px;
+	padding:0px;
+}
+
+.clearFix {
+	clear: both;
+}
+
+/* Container */
+
+#container {
+	width: 100%;
+	/*margin: 50px auto;*/
+}
+
+
+
+
+/* Slim */
+
+/* Navigation First Level */
+
+#nav_slim{
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+	font-weight: 500;
+	font-size:14px;
+}
+
+#nav_slim ul{
+	background:url('../easyui/themes/default/images/panel_title.png') repeat;
+	height:30px;
+	list-style:none;
+	/*border: 3px solid #84b41f;*/
+	-webkit-border-radius: 4px;
+}
+
+#nav_slim li{
+	float:left;
+	padding:0px;
+}
+
+#nav_slim li a{
+	
+	display:block;
+	text-align:center;
+	text-decoration:none;
+	color:#333;
+	line-height:30px;
+	padding:0px 25px;
+	-webkit-border-radius: 4px;
+	
+}
+
+#nav_slim li a:hover{
+	text-decoration:none;
+	/*background: #315907;*/
+	/*color:#FFFFFF;*/
+	font-weight: 900;
+	-webkit-border-radius: 2px;
+}
+

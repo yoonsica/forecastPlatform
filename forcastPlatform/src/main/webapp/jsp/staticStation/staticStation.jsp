@@ -57,7 +57,6 @@ request.setAttribute("basePath", basePath);
 				onRename: onRename
    			}
 		};
-	var newCount=0;
 	var className = "dark";
 	function addHoverDom(treeId, treeNode) {
 		if(!treeNode.isParent){
@@ -71,8 +70,8 @@ request.setAttribute("basePath", basePath);
 		var btn = $("#addBtn_"+treeNode.tId);
 		if (btn) btn.bind("click", function(){
 			var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-			zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
-			var node = zTree.getNodeByParam("id",newCount+99, treeNode);
+			zTree.addNodes(treeNode, {id:-100, pId:treeNode.id, name:"new node" });
+			var node = zTree.getNodeByParam("id",-100, treeNode);
 			className = (className === "dark" ? "":"dark");
 			zTree.selectNode(node);
 			setTimeout(function() {
@@ -110,7 +109,15 @@ request.setAttribute("basePath", basePath);
 	}
 	
 	function onRemove(e, treeId, treeNode) {
-		alert(treeNode.name);
+		$.ajax({  
+	        type: "POST",  
+	        url: "${basePath}staticStation/remove/"+treeNode.id,
+	        async: false,  
+	        cache:false,  
+	        success:function(data){
+	            alert(data);
+	        }  
+ 		}); 
 	}
 	
 	function beforeRename(treeId, treeNode, newName, isCancel) {
@@ -127,16 +134,30 @@ request.setAttribute("basePath", basePath);
 	}
 	
 	function onRename(e, treeId, treeNode, isCancel) {
-		alert("${basePath}staticStation/add/"+treeNode.name);
-		$.ajax({  
-	        type: "POST",  
-	        url: "${basePath}staticStation/add/"+treeNode.name,
-	        async: false,  
-	        cache:false,  
-	        success:function(data){
-	            alert(data);
-	        }  
- 		}); 
+		if(treeNode.id==-100){
+			alert("${basePath}staticStation/add/"+treeNode.name+"/"+treeNode.id);
+			$.ajax({  
+		        type: "POST",  
+		        url: "${basePath}staticStation/add/"+treeNode.name,
+		        async: false,  
+		        cache:false,  
+		        success:function(data){
+		            alert(data);
+		        }  
+	 		}); 
+		}else{
+			alert("${basePath}staticStation/update/"+treeNode.id+"/"+treeNode.name);
+			$.ajax({  
+		        type: "POST",  
+		        url: "${basePath}staticStation/update/"+treeNode.id+"/"+treeNode.name,
+		        async: false,  
+		        cache:false,  
+		        success:function(data){
+		            alert(data);
+		        }  
+	 		}); 
+		}
+		
 	}
 	
 	function showRemoveBtn(treeId, treeNode) {
@@ -151,9 +172,9 @@ request.setAttribute("basePath", basePath);
 		var nodes = zTree.getCheckedNodes(true);
 		var nodeStr="";
 		for(var i=0;i<nodes.length;i++){
-			nodeStr += nodes[i].name+",";
+			nodeStr += nodes[i].id+",";
 		}
-		alert(nodeStr.substring(0,nodeStr.length-1));
+		document.getElementById("dataFrame").src="${basePath}staticStation/toData/"+nodeStr.substring(0,nodeStr.length-1);
 	}
 	
 	function onClick(event, treeId, treeNode, clickFlag) {
@@ -175,12 +196,31 @@ request.setAttribute("basePath", basePath);
                 success:function(data){
                     $.fn.zTree.init($("#treeDemo"), setting, data);
             		var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-                        //var node = zTree.getNodeByParam("id", 2, null);
-                        //zTree.selectNode(node);
-                        //zTree.expandNode(node, true, true, true);
+            		var node = zTree.getNodeByParam("id", 0, null);
+	                zTree.selectNode(node);
+                    onClick(event, "treeDemo", node, 1);
                 }  
          	});  
 		});
+		
+		function refreshTree(nodeId){
+			$.ajax({  
+	               type: "POST",  
+	               url: "${basePath}staticStationList",
+	               async: false,  
+	               cache: false,  
+	               dataType: "json",
+	               success:function(data){
+	                   $.fn.zTree.init($("#treeDemo"), setting, data);
+	                   if(nodeId!=null){
+	                   	var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+	                       var node = zTree.getNodeByParam("id", nodeId, null);
+	                       zTree.selectNode(node);
+	                       onClick(event, "treeDemo", node, 1);
+	                   }
+	               }
+	        	});
+		}
     </script>
 </head>
   
@@ -189,6 +229,8 @@ request.setAttribute("basePath", basePath);
     <div id="treeDiv" style="width:20%;float:left">
   		<ul id="treeDemo" class="ztree"></ul>
   	</div>
-  	<div id="tableDiv" style="width:80%;float:left"></div>
+  	<div id="tableDiv" style="width:80%;float:left;" >
+  	<iframe id="dataFrame" src="" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+  	</div>
   </body>
 </html>

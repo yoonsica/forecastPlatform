@@ -25,7 +25,7 @@ public class StaticStationServiceImpl implements StaticStationService {
 	@Override
 	public void delete(String id) {
 		// TODO Auto-generated method stub
-		staticStationDao.delete(id);
+		staticStationDao.delete(Integer.valueOf(id));
 	}
 
 	@Override
@@ -35,10 +35,11 @@ public class StaticStationServiceImpl implements StaticStationService {
 		list1 = new ArrayList<ZTreeNode>();
 		ZTreeNode node1 = new ZTreeNode("静态GPS监测列表", 0, 0);
 		node1.setNocheck("true");
+		node1.setIsParent("true");
 		list1.add(node1);
 		int i=0;
 		for(StaticStation station:list){
-			ZTreeNode node = new ZTreeNode(station.getName(), ++i, 0);
+			ZTreeNode node = new ZTreeNode(station.getName(), station.getStationId(), 0);
 			node.setNocheck("false");
 			list1.add(node);
 		}
@@ -49,6 +50,11 @@ public class StaticStationServiceImpl implements StaticStationService {
 	public void update(StaticStation station) {
 		// TODO Auto-generated method stub
 		staticStationDao.update(station);
+	}
+
+	@Override
+	public StaticStation getById(String id) {
+		return staticStationDao.findById(Integer.valueOf(id));
 	}
 
 }

@@ -12,4 +12,5 @@ public interface StaticStationService {
 	public void delete(String id);
 	public List<ZTreeNode> findAll();
 	public void update(StaticStation station);
+	public StaticStation getById(String id);
 }

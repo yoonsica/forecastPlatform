@@ -6,7 +6,8 @@ import com.ceit.vic.platform.models.StaticStation;
 
 public interface StaticStationDao {
 	public void add(StaticStation station);
-	public void delete(String id);
+	public void delete(int id);
 	public List<StaticStation> findAll();
 	public void update(StaticStation station);
+	StaticStation findById(int id);
 }

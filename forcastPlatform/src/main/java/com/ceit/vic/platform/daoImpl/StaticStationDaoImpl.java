@@ -20,19 +20,22 @@ public class StaticStationDaoImpl implements StaticStationDao{
 
 	@Override
 	public void add(StaticStation station) {
-		// TODO Auto-generated method stub
 		log.info("add StaticStation");
+		sf.getCurrentSession().save(station);
 	}
 
 	@Override
-	public void delete(String id) {
-		// TODO Auto-generated method stub
-		log.info("delete StaticStation");
+	public void delete(int id) {
+		log.info("delete StaticStation "+id);
+		StaticStation station = findById(id);
+		if(null!=station){
+			log.info("**************");
+			sf.getCurrentSession().delete(findById(id));
+		}
 	}
 
 	@Override
 	public List<StaticStation> findAll() {
-		// TODO Auto-generated method stub
 		log.info("findAll StaticStation");
 		Query query = sf.getCurrentSession().createQuery("from StaticStation");
 		return query.list();
@@ -40,7 +43,11 @@ public class StaticStationDaoImpl implements StaticStationDao{
 
 	@Override
 	public void update(StaticStation station) {
-		// TODO Auto-generated method stub
 		log.info("update StaticStation");
+		sf.getCurrentSession().update(station);
+	}
+	@Override
+	public StaticStation findById(int id){
+		return (StaticStation) sf.getCurrentSession().get(StaticStation.class, id);
 	}
 }
